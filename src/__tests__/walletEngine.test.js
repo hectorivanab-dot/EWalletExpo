@@ -176,7 +176,8 @@ test('Debe convertir correctamente COP a USDT', () => {
 
   const result = buyUSDT(500000, 400000);
 
-  expect(result.usdt).toBeGreaterThan(0);
+  expect(result.usdt)
+    .toBe(400000 / result.exchangeRate);
 
 });
 
@@ -186,9 +187,21 @@ test('Debe convertir correctamente COP a USDT', () => {
 
 test('Debe descontar dinero al transferir a meta de ahorro', () => {
 
-  const result = transferToSavingsGoal(200000, 50000);
+  const goals = createSavingsGoals();
 
-  expect(result.remainingBalance).toBe(150000);
+  const goalId = goals[0].id;
+
+  const result = transferToSavingsGoal(
+    200000,
+    goals,
+    goalId,
+    50000
+  );
+
+  expect(result.balance).toBe(150000);
+
+  expect(result.goals[0].saved)
+    .toBe(goals[0].saved + 50000);
 
 });
 

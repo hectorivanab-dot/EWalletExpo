@@ -84,6 +84,7 @@ export function calculateTotalCashback(transactions) {
   }, 0);
 
 }
+
 /* =========================
    USDT SYSTEM
 ========================= */
@@ -133,13 +134,44 @@ export function createSavingsGoals() {
 
 }
 
-export function transferToSavingsGoal(balance, amount) {
+export function transferToSavingsGoal(
+  balance,
+  goals,
+  goalId,
+  amount
+) {
+
+  if (amount > balance) {
+
+    return {
+      status: 'Rechazado',
+      message: 'Saldo insuficiente',
+    };
+
+  }
+
+  const updatedGoals = goals.map(goal => {
+
+    if (goal.id === goalId) {
+
+      return {
+        ...goal,
+        saved: goal.saved + amount,
+      };
+
+    }
+
+    return goal;
+
+  });
 
   return {
 
-    remainingBalance: balance - amount,
+    status: 'Completado',
 
-    transferred: amount,
+    balance: balance - amount,
+
+    goals: updatedGoals,
 
   };
 
